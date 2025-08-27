@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>ChatGPT → MD: Options</title>
+<style>
+  body{font:14px/1.4 system-ui; padding:16px; max-width:720px}
+  label{display:block; margin:12px 0 6px; font-weight:600}
+  input[type=text]{width:100%; padding:8px; box-sizing:border-box}
+  .row{margin-top:12px}
+  .grid{display:grid; gap:8px; grid-template-columns: 180px 1fr}
+  small{opacity:.7}
+</style>
+
+<h2>저장 설정</h2>
+
+<div class="grid">
+  <div>저장 위치</div>
+  <div>
+    <label><input type="radio" name="target" value="local"> 로컬(기본 다운로드 하위)</label>
+    <label><input type="radio" name="target" value="gdrive"> Google Drive</label>
+  </div>
+
+  <div>로컬 폴더</div>
+  <div><input id="folder" type="text" placeholder="ChatGPT" /></div>
+
+  <div>파일명 패턴</div>
+  <div>
+    <input id="pattern" type="text" placeholder="{date}-{time}-{title}" />
+    <small>토큰: {title}, {date}, {time} · 확장자는 자동 .md</small>
+  </div>
+
+  <div>Google Drive 폴더 ID</div>
+  <div>
+    <input id="driveFolderId" type="text" placeholder="예: 1AbCdEfGhIj..." />
+    <small>웹에서 해당 폴더 열기 → URL의 마지막 ID 복사</small>
+  </div>
+
+  <div>Google 계정 연결</div>
+  <div>
+    <button id="connect">연결</button>
+    <button id="disconnect">해제</button>
+    <span id="authStatus" style="margin-left:8px"></span>
+  </div>
+</div>
+
+<div class="row">
+  <button id="save">설정 저장</button>
+  <span id="status" style="margin-left:8px"></span>
+</div>
+
+<script src="options.js"></script>

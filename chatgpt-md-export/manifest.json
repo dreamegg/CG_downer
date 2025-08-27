@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT → Markdown",
+  "version": "1.2.0",
+  "description": "ChatGPT 대화를 Markdown으로 저장 (로컬/Google Drive)",
+  "action": { "default_popup": "popup.html" },
+  "permissions": ["activeTab", "scripting", "downloads", "storage", "identity"],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://www.googleapis.com/*",
+    "https://accounts.google.com/*"
+  ],
+  "oauth2": {
+    "client_id": "2144197307-e3rh6misdh25tjb3h303v43l73865v87.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/drive.file"]
+  },
+  "background": { "service_worker": "service_worker.js" },
+  "options_page": "options.html",
+  "commands": {
+    "save_markdown": {
+      "suggested_key": { "default": "Ctrl+Shift+Y", "mac": "Command+Shift+Y" },
+      "description": "Save ChatGPT page as Markdown"
+    }
+  },
+  "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }
+}
