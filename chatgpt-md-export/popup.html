@@ -1,10 +1,22 @@
 <!doctype html>
 <html>
-  <head><meta charset="utf-8"><title>ChatGPT → MD</title></head>
-  <body style="min-width:240px;font:13px/1.4 system-ui;">
-    <h3 style="margin:8px 0;">ChatGPT → Markdown</h3>
+  <head>
+    <meta charset="utf-8">
+    <title>ChatGPT → MD</title>
+    <style>
+      body{min-width:240px;font:13px/1.4 system-ui;margin:0;padding:12px 16px}
+      h3{margin:0 0 8px}
+      #driveStatus{margin-top:8px;font-size:12px}
+      #driveStatus.ok{color:#0b7c3e}
+      #driveStatus.warn{color:#b23b12}
+      #driveStatus.info{color:#1f3a60}
+    </style>
+  </head>
+  <body>
+    <h3>ChatGPT → Markdown</h3>
     <button id="save">Save current chat (.md)</button>
-    <p style="opacity:.7">단축키: Ctrl/⌘+Shift+Y</p>
+    <p style="opacity:.7;margin:8px 0 0">단축키: Ctrl/⌘+Shift+Y</p>
+    <div id="driveStatus" class="info">저장 위치 확인 중…</div>
     <script src="popup.js"></script>
   </body>
 </html>
