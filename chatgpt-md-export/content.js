@@ -25,21 +25,17 @@ function extractOneMessage(node) {
   clones.querySelectorAll('pre code').forEach(code => {
     const lang = code.className.split('language-')[1] || '';
     const src = code.textContent;
-    const fence = '```' + lang + '\n' + src + '\n```';
+    const fence = '\n```' + lang + '\n' + src + '\n```\n';
     const wrapper = document.createElement('p');
-    wrapper.textContent = fence; // 일단 텍스트로 두고 나중 join 시 처리
+    wrapper.textContent = fence;
     code.parentElement.replaceWith(wrapper);
   });
 
   // 불필요한 버튼/메뉴 제거
   clones.querySelectorAll('button, svg, nav, menu, footer').forEach(e => e.remove());
 
-  const paragraphs = Array.from(clones.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6'))
-    .map(e => e.textContent);
-
-  // fallback: innerText
-  let text = paragraphs.join('\n');
-  if (!text.trim()) text = clones.innerText || '';
+  // 텍스트 추출 (중복 방지를 위해 innerText 사용)
+  let text = clones.innerText || '';
 
   return {
     role: (role || 'assistant').toLowerCase(),
