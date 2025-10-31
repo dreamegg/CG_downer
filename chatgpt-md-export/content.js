@@ -57,7 +57,12 @@ function collectMessages() {
     d.innerText && d.innerText.length > 0 && d.querySelector('pre, p')
   );
 
-  return nodes.map(extractOneMessage).filter(m => m.text);
+  // 중첩된 노드 제거 (자식 노드가 부모 노드와 함께 포함되는 경우 방지)
+  const uniqueNodes = nodes.filter(node => 
+    !nodes.some(otherNode => otherNode !== node && otherNode.contains(node))
+  );
+
+  return uniqueNodes.map(extractOneMessage).filter(m => m.text);
 }
 
 function toMarkdown(title, messages) {
@@ -69,7 +74,13 @@ function toMarkdown(title, messages) {
   lines.push(`> Exported: ${ts}`);
   lines.push('');
 
+  let lastMessageText = null;
   messages.forEach((m, i) => {
+    if (m.text === lastMessageText) {
+      return; // 이전 메시지와 내용이 같으면 건너뛰기
+    }
+    lastMessageText = m.text;
+
     const role = m.role === 'user' ? 'User' : 'Assistant';
     lines.push(`## ${i + 1}. ${role}`);
     // 삼중백틱 변환 처리
