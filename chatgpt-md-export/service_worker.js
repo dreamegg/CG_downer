@@ -30,10 +30,14 @@ async function triggerSave(){
     } else {
       // local
       const dataUrl = "data:text/markdown;charset=utf-8," + encodeURIComponent(md);
-      const folder = (cfg.folder || "ChatGPT").replace(/^\/+|\/+$/g,"");
+      let filename = `${filenameBase}.md`;
+      if (!filenameBase.includes('/')) {
+        const folder = (cfg.folder || "ChatGPT").replace(/^\/+|\/+$/g,"");
+        filename = `${folder}/${filename}`;
+      }
       await chrome.downloads.download({
         url: dataUrl,
-        filename: `${folder}/${filenameBase}.md`,
+        filename: filename,
         saveAs: false,
         conflictAction: "uniquify"
       });
@@ -43,10 +47,14 @@ async function triggerSave(){
 
 function buildNameFromMd(cfg, tab, md){
   const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
   const date = now.toISOString().slice(0,10);
   const time = now.toTimeString().slice(0,8).replace(/:/g,"-");
   const title = sanitizeTitle(extractTitle(md) || tab.title || "ChatGPT");
-  return (cfg.pattern || "{date}-{time}-{title}")
+  return (cfg.pattern || "{year}/{month}/{date}-{time}-{title}")
+    .replaceAll("{year}", year)
+    .replaceAll("{month}", month)
     .replaceAll("{date}", date)
     .replaceAll("{time}", time)
     .replaceAll("{title}", title);

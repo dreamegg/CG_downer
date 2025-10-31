@@ -4,7 +4,7 @@ const $ = (s)=>document.querySelector(s);
   const defaults = {
     target: "local",
     folder: "ChatGPT",
-    pattern: "{date}-{time}-{title}",
+    pattern: "{year}/{month}/{date}-{time}-{title}",
     driveFolderId: "",
     auth: { access_token: null, expires_at: 0 }
   };
