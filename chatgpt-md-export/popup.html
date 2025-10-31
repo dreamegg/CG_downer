@@ -3,20 +3,16 @@
   <head>
     <meta charset="utf-8">
     <title>ChatGPT → MD</title>
-    <style>
-      body{min-width:240px;font:13px/1.4 system-ui;margin:0;padding:12px 16px}
-      h3{margin:0 0 8px}
-      #driveStatus{margin-top:8px;font-size:12px}
-      #driveStatus.ok{color:#0b7c3e}
-      #driveStatus.warn{color:#b23b12}
-      #driveStatus.info{color:#1f3a60}
-    </style>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <h3>ChatGPT → Markdown</h3>
-    <button id="save">Save current chat (.md)</button>
-    <p style="opacity:.7;margin:8px 0 0">단축키: Ctrl/⌘+Shift+Y</p>
-    <div id="driveStatus" class="info">저장 위치 확인 중…</div>
+    <div class="popup-container">
+      <h3 class="title">ChatGPT → Markdown</h3>
+      <button id="save">Save current chat (.md)</button>
+      <p class="shortcut">단축키: Ctrl/⌘+Shift+Y</p>
+      <div id="driveStatus" class="info">저장 위치 확인 중…</div>
+    <a href="options.html" target="_blank" id="optionsLink" style="display:none; font-size: 12px; margin-top: 4px;">Google Drive에 연결하려면 여기를 클릭하세요.</a>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>

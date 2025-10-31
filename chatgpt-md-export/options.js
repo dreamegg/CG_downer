@@ -24,6 +24,9 @@ function renderAuthStatus(auth){
   const now = Date.now()/1000|0;
   const ok = !!auth?.access_token && auth.expires_at > now + 60;
   $("#authStatus").textContent = ok ? "연결됨" : "미연결";
+  $("#authStatus").className = ok ? 'ok' : 'warn';
+  $("#connect").style.display = ok ? 'none' : 'inline-block';
+  $("#disconnect").style.display = ok ? 'inline-block' : 'none';
 }
 
 $("#save").addEventListener("click", async ()=>{

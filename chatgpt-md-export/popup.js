@@ -1,5 +1,6 @@
 const saveBtn = document.getElementById('save');
 const statusEl = document.getElementById('driveStatus');
+const optionsLink = document.getElementById('optionsLink');
 
 saveBtn.addEventListener('click', () => {
   chrome.runtime.sendMessage({ type: 'REQUEST_SAVE' });
@@ -19,6 +20,8 @@ async function updateDriveStatus() {
     const { cfg = {} } = await chrome.storage.sync.get({ cfg: {} });
     const target = cfg.target || 'local';
 
+    optionsLink.style.display = 'none';
+
     if (target !== 'gdrive') {
       setStatus('저장 위치: 로컬 다운로드 폴더', 'info');
       return;
@@ -31,7 +34,8 @@ async function updateDriveStatus() {
     if (connected) {
       setStatus('Google Drive: 연결됨', 'ok');
     } else {
-      setStatus('Google Drive: 다시 연결 필요', 'warn');
+      setStatus('Google Drive: 연결 필요', 'warn');
+      optionsLink.style.display = 'block';
     }
   } catch (err) {
     setStatus('연결 상태를 불러올 수 없습니다', 'warn');
