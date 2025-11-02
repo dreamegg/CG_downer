@@ -1,8 +1,23 @@
 chrome.commands.onCommand.addListener((cmd)=>{ if(cmd==="save_markdown") triggerSave(); });
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse)=>{
-  if (msg.type === "REQUEST_SAVE") triggerSave();
-  if (msg.type === "OAUTH_CONNECT") { connect().then(sendResponse); return true; }
-  if (msg.type === "OAUTH_DISCONNECT") { disconnect().then(sendResponse); return true; }
+  if (msg.type === "REQUEST_SAVE") {
+    triggerSave();
+    return; // No async response
+  }
+  if (msg.type === "OAUTH_CONNECT") {
+    (async () => {
+      const auth = await connect();
+      sendResponse(auth);
+    })();
+    return true;
+  }
+  if (msg.type === "OAUTH_DISCONNECT") {
+    (async () => {
+      await disconnect();
+      sendResponse({});
+    })();
+    return true;
+  }
 });
 
 async function triggerSave(){
@@ -85,27 +100,32 @@ async function saveAuth(auth){
 
 // Implicit flow via chrome.identity.launchWebAuthFlow
 async function authorize(){
-  // manifest.oauth2.client_id 와 동일해야 함
-  const { oauth2 } = chrome.runtime.getManifest();
-  const clientId = oauth2.client_id;
-  const scopes = encodeURIComponent(oauth2.scopes.join(" "));
-  const redirectUri = chrome.identity.getRedirectURL(); // https://<ext-id>.chromiumapp.org/
-  const authUrl =
-    "https://accounts.google.com/o/oauth2/v2/auth"
-    + `?client_id=${encodeURIComponent(clientId)}`
-    + `&response_type=token`
-    + `&redirect_uri=${encodeURIComponent(redirectUri)}`
-    + `&scope=${scopes}`
-    + `&prompt=consent`;
+  try {
+    // manifest.oauth2.client_id 와 동일해야 함
+    const { oauth2 } = chrome.runtime.getManifest();
+    const clientId = oauth2.client_id;
+    const scopes = encodeURIComponent(oauth2.scopes.join(" "));
+    const redirectUri = chrome.identity.getRedirectURL(); // https://<ext-id>.chromiumapp.org/
+    const authUrl =
+      "https://accounts.google.com/o/oauth2/v2/auth"
+      + `?client_id=${encodeURIComponent(clientId)}`
+      + `&response_type=token`
+      + `&redirect_uri=${encodeURIComponent(redirectUri)}`
+      + `&scope=${scopes}`
+      + `&prompt=consent`;
 
-  const respUrl = await chrome.identity.launchWebAuthFlow({ url: authUrl, interactive: true });
-  // respUrl: https://<ext-id>.chromiumapp.org/#access_token=...&token_type=Bearer&expires_in=3599&scope=...
-  const hash = new URL(respUrl).hash.substring(1);
-  const params = new URLSearchParams(hash);
-  const access_token = params.get("access_token");
-  const expires_in = parseInt(params.get("expires_in") || "0", 10);
-  const expires_at = Math.floor(Date.now()/1000) + Math.max(0, expires_in - 30);
-  return { access_token, expires_at };
+    const respUrl = await chrome.identity.launchWebAuthFlow({ url: authUrl, interactive: true });
+    // respUrl: https://<ext-id>.chromiumapp.org/#access_token=...&token_type=Bearer&expires_in=3599&scope=...
+    const hash = new URL(respUrl).hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const access_token = params.get("access_token");
+    const expires_in = parseInt(params.get("expires_in") || "0", 10);
+    const expires_at = Math.floor(Date.now()/1000) + Math.max(0, expires_in - 30);
+    return { access_token, expires_at };
+  } catch (e) {
+    console.log("Auth flow failed", e);
+    return { access_token: null, expires_at: 0 };
+  }
 }
 
 // ---------- Drive Upload ----------

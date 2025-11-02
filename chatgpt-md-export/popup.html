@@ -3,15 +3,21 @@
   <head>
     <meta charset="utf-8">
     <title>ChatGPT → MD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div class="popup-container">
       <h3 class="title">ChatGPT → Markdown</h3>
-      <button id="save">Save current chat (.md)</button>
+      <div class="d-grid gap-2">
+        <button id="saveLocal" class="btn btn-primary mb-2"><i class="bi bi-download"></i> 로컬에 저장</button>
+        <button id="saveDrive" class="btn btn-outline-primary"><i class="bi bi-google-drive"></i> 드라이브에 저장</button>
+      </div>
       <p class="shortcut">단축키: Ctrl/⌘+Shift+Y</p>
-      <div id="driveStatus" class="info">저장 위치 확인 중…</div>
-    <a href="options.html" target="_blank" id="optionsLink" style="display:none; font-size: 12px; margin-top: 4px;">Google Drive에 연결하려면 여기를 클릭하세요.</a>
+      <div id="driveStatus" class="info text-center mt-2">저장 위치 확인 중…</div>
+      <div class="text-center mt-2">
+        <a href="options.html" target="_blank" id="optionsLink" style="font-size: 12px;">Google Drive에 연결하려면 여기를 클릭하세요.</a>
+      </div>
     </div>
     <script src="popup.js"></script>
   </body>

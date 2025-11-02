@@ -48,7 +48,5 @@ $("#connect").addEventListener("click", async ()=>{
 
 $("#disconnect").addEventListener("click", async ()=>{
   await chrome.runtime.sendMessage({ type: "OAUTH_DISCONNECT" });
-  const { cfg } = await chrome.storage.sync.get({ cfg: {} });
-  await chrome.storage.sync.set({ cfg: { ...cfg, auth: { access_token: null, expires_at: 0 } }});
   renderAuthStatus({ access_token:null, expires_at:0 });
 });
